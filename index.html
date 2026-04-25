@@ -1,13 +1,665 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Happiness Habits - Connection Shift</title>
+    <style>
+        :root {
+            --primary: #10b981; /* Emerald 500 */
+            --primary-dark: #059669;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            --white: #ffffff;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--slate-50);
+            color: var(--slate-800);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            flex: 1;
+        }
+
+        /* Typography */
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand {
+            font-size: 0.65rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -0.02em;
+            color: var(--slate-900);
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--slate-400);
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Style */
+        .card {
+            background: var(--white);
+            border-radius: 2rem;
+            padding: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+            border: 1px solid var(--slate-200);
+            margin-bottom: 2rem;
+        }
+
+        /* Sliders */
+        .input-group {
+            margin-bottom: 2rem;
+        }
+
+        .label-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--slate-700);
+            line-height: 1.4;
+        }
+
+        .val-display {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--slate-300);
+            min-width: 2.5rem;
+            text-align: right;
+            line-height: 1;
+        }
+
+        .input-group.after .val-display {
+            color: var(--primary);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: var(--slate-100);
+            border-radius: 10px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: var(--slate-400);
+            border: 4px solid var(--white);
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .input-group.after input[type="range"]::-webkit-slider-thumb {
+            background: var(--primary);
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--slate-400);
+            margin-top: 0.75rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1.25rem;
+            border-radius: 1.25rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--slate-900);
+            color: var(--white);
+            box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background: var(--slate-800);
+        }
+
+        .btn-outline {
+            background: var(--white);
+            border: 1px solid var(--slate-200);
+            color: var(--slate-600);
+            margin-top: 1rem;
+        }
+
+        .btn-outline:hover {
+            background: var(--slate-50);
+            color: var(--slate-900);
+        }
+
+        /* Results Visualization */
+        .result-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .shift-badge {
+            background: var(--slate-900);
+            color: var(--white);
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            margin-bottom: 1rem;
+        }
+
+        .shift-percent {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: block;
+        }
+
+        .shift-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--primary);
+        }
+
+        .score-row {
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .score-card {
+            background: var(--slate-50);
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            text-align: center;
+        }
+
+        .score-card.after {
+            background: #ecfdf5; /* Emerald 50 */
+            border: 1px solid #d1fae5;
+        }
+
+        .score-val {
+            font-size: 1.75rem;
+            font-weight: 900;
+            display: block;
+            color: var(--slate-800);
+        }
+
+        .score-lbl {
+            font-size: 0.55rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--slate-400);
+        }
+
+        /* Chart */
+        .chart-container {
+            margin-top: 1rem;
+        }
+
+        .chart-row {
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--slate-700);
+            margin-bottom: 0.5rem;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .bar-wrap {
+            height: 24px;
+            background: var(--slate-100);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .bar-before {
+            height: 100%;
+            background: var(--slate-200);
+            transition: width 1s ease-out;
+            width: 0;
+            position: absolute;
+            left: 0;
+        }
+
+        .bar-after {
+            height: 100%;
+            background: var(--primary);
+            transition: width 1s ease-out;
+            width: 0;
+            position: absolute;
+            left: 0;
+            opacity: 0.8;
+            border-right: 2px solid white;
+        }
+
+        .bar-after-inner {
+            height: 100%;
+            width: 100%;
+            background: var(--primary);
+        }
+
+        .bar-meta {
+            position: absolute;
+            right: 12px;
+            font-size: 0.6rem;
+            font-weight: 900;
+            color: var(--slate-500);
+            z-index: 10;
+        }
+
+        .shift-indicator {
+            font-size: 0.6rem;
+            font-weight: 900;
+            margin-top: 0.25rem;
+            display: inline-block;
+        }
+        .text-pos { color: var(--primary-dark); }
+        .text-neg { color: #ef4444; }
+
+        /* Welcome text */
+        .prose {
+            color: var(--slate-600);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .prose p { margin-bottom: 1rem; }
+
+        footer {
+            padding: 3rem 1.5rem;
+            text-align: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--slate-400);
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 1.5rem 1rem; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <span class="brand">Alexia Georghiou</span>
+        <h1>THE CONNECTION METER</h1>
+        <span class="subtitle">The Happiness Habits Method</span>
+    </header>
+
+    <!-- 1. Welcome Section -->
+    <div id="section-welcome" class="section active">
+        <div class="card">
+            <div class="prose">
+                <p>Welcome to this collective experience. Connection is a fundamental habit for neuro-happiness and human belonging.</p>
+                <p>Before we begin the keynote, please take 30 seconds to rate your current experience across five dimensions. We will revisit these after the session to measure our collective shift.</p>
+            </div>
+            <button class="btn btn-primary" onclick="showSection('before')">
+                Start "Before" Ratings
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. Before Section -->
+    <div id="section-before" class="section">
+        <div class="card">
+            <div class="prose" style="margin-bottom: 2.5rem; text-align: center;">
+                <p><strong>Before Experience:</strong> Rate your current state in the room right now.</p>
+            </div>
+
+            <div id="before-inputs">
+                <!-- Template for inputs will be rendered here -->
+            </div>
+
+            <button class="btn btn-primary" onclick="showSection('after')" style="margin-top: 1rem;">
+                Next
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. After Section -->
+    <div id="section-after" class="section">
+        <div class="card">
+            <div class="prose" style="margin-bottom: 2.5rem; text-align: center;">
+                <p><strong>After Experience:</strong> Reflect on your state now that we have finished.</p>
+            </div>
+
+            <div id="after-inputs">
+                <!-- Template for inputs will be rendered here -->
+            </div>
+
+            <button class="btn btn-primary" onclick="calculateAndShowResults()" style="margin-top: 1rem;">
+                Generate Connection Shift
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 4. Result Section -->
+    <div id="section-result" class="section">
+        <div class="result-header">
+            <div class="shift-badge">
+                <span class="shift-percent" id="total-shift-percent">+0%</span>
+                <span class="shift-label">Collective Shift</span>
+            </div>
+            <p class="prose" style="font-style: italic; font-size: 0.85rem; max-width: 300px; margin: 0 auto 2rem;">"Happiness Habits practiced together foster unity, connection, and community."</p>
+        </div>
+
+        <div class="score-row">
+            <div class="score-card">
+                <span class="score-lbl">Avg Before</span>
+                <span class="score-val" id="avg-before-score">0.0</span>
+            </div>
+            <div class="score-card after">
+                <span class="score-lbl">Avg After</span>
+                <span class="score-val" id="avg-after-score">0.0</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="subtitle" style="margin-bottom: 1.5rem; display: block; border-bottom: 1px solid var(--slate-100); padding-bottom: 0.75rem;">Metrical Comparison</h2>
+            <div id="chart-display" class="chart-container">
+                <!-- Bars will be here -->
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="downloadCSV()">
+            Download Results (CSV)
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+
+        <button class="btn btn-outline" onclick="resetApp()">
+            Reset Data
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 Knoxville Happiness Coalition
+</footer>
+
+<script>
+    // Configuration
+    const DIMENSIONS = [
+        { id: 'engagement', name: 'Engagement' },
+        { id: 'connection', name: 'Emotional Connection' },
+        { id: 'belonging', name: 'Sense of Belonging' },
+        { id: 'hope', name: 'Hopefulness' },
+        { id: 'presence', name: 'Shared Human Presence' }
+    ];
+
+    // State
+    const state = {
+        before: {},
+        after: {}
+    };
+
+    // Initialize state
+    DIMENSIONS.forEach(d => {
+        state.before[d.id] = 5;
+        state.after[d.id] = 5;
+    });
+
+    // DOM Rendering
+    function renderInputs() {
+        const beforeContainer = document.getElementById('before-inputs');
+        const afterContainer = document.getElementById('after-inputs');
+        
+        beforeContainer.innerHTML = '';
+        afterContainer.innerHTML = '';
+
+        DIMENSIONS.forEach(d => {
+            // Before Input
+            const bGroup = createInputGroup(d, 'before');
+            beforeContainer.appendChild(bGroup);
+
+            // After Input
+            const aGroup = createInputGroup(d, 'after');
+            afterContainer.appendChild(aGroup);
+        });
+    }
+
+    function createInputGroup(dimension, type) {
+        const div = document.createElement('div');
+        div.className = `input-group ${type}`;
+        
+        div.innerHTML = `
+            <div class="label-wrap">
+                <label>${dimension.name}</label>
+                <div class="val-display" id="val-${type}-${dimension.id}">${state[type][dimension.id]}</div>
+            </div>
+            <input type="range" min="0" max="10" step="1" 
+                   value="${state[type][dimension.id]}" 
+                   oninput="updateValue('${type}', '${dimension.id}', this.value)">
+            <div class="range-labels">
+                <span>0</span>
+                <span>5</span>
+                <span>10</span>
+            </div>
+        `;
+        return div;
+    }
+
+    function updateValue(type, id, val) {
+        state[type][id] = parseInt(val);
+        document.getElementById(`val-${type}-${id}`).innerText = val;
+    }
+
+    function showSection(sectionId) {
+        // Scroll top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(`section-${sectionId}`).classList.add('active');
+    }
+
+    function calculateAndShowResults() {
+        const beforeValues = Object.values(state.before);
+        const afterValues = Object.values(state.after);
+
+        const avgBefore = beforeValues.reduce((a, b) => a + b, 0) / DIMENSIONS.length;
+        const avgAfter = afterValues.reduce((a, b) => a + b, 0) / DIMENSIONS.length;
+        
+        const totalShift = ((avgAfter - avgBefore) / 10) * 100;
+        
+        // Update Summary
+        document.getElementById('avg-before-score').innerText = avgBefore.toFixed(1);
+        document.getElementById('avg-after-score').innerText = avgAfter.toFixed(1);
+        
+        const shiftBadge = document.getElementById('total-shift-percent');
+        shiftBadge.innerText = (totalShift >= 0 ? '+' : '') + totalShift.toFixed(1) + '%';
+
+        // Render Chart
+        const chart = document.getElementById('chart-display');
+        chart.innerHTML = '';
+
+        DIMENSIONS.forEach(d => {
+            const b = state.before[d.id];
+            const a = state.after[d.id];
+            const diff = a - b;
+            const diffPct = (diff / 10) * 100;
+
+            const row = document.createElement('div');
+            row.className = 'chart-row';
+            row.innerHTML = `
+                <span class="chart-label">${d.name}</span>
+                <div class="bar-wrap">
+                    <div class="bar-before" style="width: ${b * 10}%"></div>
+                    <div class="bar-after" style="width: ${a * 10}%"></div>
+                    <div class="bar-meta">B: ${b} | A: ${a}</div>
+                </div>
+                <div class="shift-indicator ${diff >= 0 ? 'text-pos' : 'text-neg'}">
+                    ${diff >= 0 ? '↑' : '↓'} ${diffPct.toFixed(0)}% Shift
+                </div>
+            `;
+            chart.appendChild(row);
+        });
+
+        showSection('result');
+    }
+
+    function resetApp() {
+        if (!confirm('Are you sure you want to reset all data and start over?')) return;
+        
+        // Reset state
+        DIMENSIONS.forEach(d => {
+            state.before[d.id] = 5;
+            state.after[d.id] = 5;
+        });
+        
+        renderInputs();
+        showSection('welcome');
+    }
+
+    function downloadCSV() {
+        const rows = [
+            ['Dimension', 'Before Rating', 'After Rating', 'Point Shift', 'Percentage Shift']
+        ];
+
+        DIMENSIONS.forEach(d => {
+            const b = state.before[d.id];
+            const a = state.after[d.id];
+            const diff = a - b;
+            const diffPct = (diff / 10) * 100;
+            rows.push([
+                d.name,
+                b,
+                a,
+                diff,
+                `${diffPct.toFixed(1)}%`
+            ]);
+        });
+
+        // Add summary
+        const beforeValues = Object.values(state.before);
+        const afterValues = Object.values(state.after);
+        const avgBefore = beforeValues.reduce((a, b) => a + b, 0) / DIMENSIONS.length;
+        const avgAfter = afterValues.reduce((a, b) => a + b, 0) / DIMENSIONS.length;
+        const totalShift = ((avgAfter - avgBefore) / 10) * 100;
+
+        rows.push([]);
+        rows.push(['Average Score', avgBefore.toFixed(1), avgAfter.toFixed(1), (avgAfter - avgBefore).toFixed(1), `${totalShift.toFixed(1)}%`]);
+        rows.push(['Timestamp', new Date().toISOString()]);
+
+        const csvContent = "data:text/csv;charset=utf-8," 
+            + rows.map(e => e.join(",")).join("\n");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "connection_shift_results.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // App Initialization
+    renderInputs();
+</script>
+
+</body>
+</html>
