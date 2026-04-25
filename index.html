@@ -352,6 +352,59 @@
         .text-pos { color: var(--primary-dark); }
         .text-neg { color: #ef4444; }
 
+        /* Contact Footer Group */
+        .contact-group {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--slate-100);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .contact-name {
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: var(--slate-900);
+        }
+
+        .contact-detail {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--slate-500);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-detail:hover {
+            color: var(--primary);
+        }
+
+        .frame-btn {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            margin-top: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            padding: 1rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .frame-btn:hover {
+            background: #dcfce7;
+            transform: scale(1.02);
+        }
+
         /* Welcome text */
         .prose {
             color: var(--slate-600);
@@ -463,6 +516,18 @@
             <h2 class="subtitle" style="margin-bottom: 1.5rem; display: block; border-bottom: 1px solid var(--slate-100); padding-bottom: 0.75rem;">Metrical Comparison</h2>
             <div id="chart-display" class="chart-container">
                 <!-- Bars will be here -->
+            </div>
+
+            <div class="contact-group">
+                <span class="contact-name">Alexia Georghiou</span>
+                <a href="tel:0118652833605" class="contact-detail">011-865-283-3605</a>
+                <a href="mailto:alexia@knoxvillehappinesscoalition.com" class="contact-detail">alexia@knoxvillehappinesscoalition.com</a>
+                <a href="https://www.knoxvillehappinesscoalition.com" target="_blank" rel="noopener noreferrer" class="contact-detail">www.knoxvillehappinesscoalition.com</a>
+                
+                <a href="https://knoxvillehappinesscoalition.github.io/happiness/" target="_blank" rel="noopener noreferrer" class="frame-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    I practice my happiness habits
+                </a>
             </div>
         </div>
 
