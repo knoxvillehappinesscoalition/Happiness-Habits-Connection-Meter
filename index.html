@@ -222,50 +222,81 @@
             margin-bottom: 2rem;
         }
 
+        .shift-badges-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
         .shift-badge {
             background: var(--slate-900);
             color: var(--white);
             display: inline-block;
-            padding: 1rem 2rem;
-            border-radius: 100px;
-            margin-bottom: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .shift-badge.group {
+            background: var(--primary);
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
         }
 
         .shift-percent {
-            font-size: 2.5rem;
+            font-size: 2.25rem;
             font-weight: 900;
             display: block;
+            line-height: 1;
+            margin-bottom: 0.25rem;
         }
 
         .shift-label {
-            font-size: 0.65rem;
+            font-size: 0.55rem;
             text-transform: uppercase;
-            font-weight: 700;
+            font-weight: 800;
             letter-spacing: 0.2em;
-            color: var(--primary);
+            color: rgba(255,255,255,0.6);
         }
 
-        .score-row {
+        .shift-badge.group .shift-label {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .cohort-info {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--slate-400);
+            margin-top: 0.5rem;
+        }
+
+        .result-grid {
             display: grid;
             grid-template-cols: 1fr 1fr;
             gap: 1rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .score-card {
-            background: var(--slate-50);
+            background: var(--white);
             padding: 1.5rem;
             border-radius: 1.5rem;
             text-align: center;
+            border: 1px solid var(--slate-200);
         }
 
-        .score-card.after {
-            background: #ecfdf5; /* Emerald 50 */
-            border: 1px solid #d1fae5;
+        .score-card.highlight {
+            border-color: var(--primary);
+            background: #f0fdf4;
         }
 
         .score-val {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 900;
             display: block;
             color: var(--slate-800);
@@ -279,75 +310,111 @@
             color: var(--slate-400);
         }
 
-        /* Chart */
-        .chart-container {
-            margin-top: 1rem;
+        /* Comparison Chart */
+        .comparison-wrap {
+            margin-bottom: 2rem;
         }
 
-        .chart-row {
+        .comparison-toggle {
+            display: flex;
+            background: var(--slate-100);
+            padding: 0.25rem;
+            border-radius: 0.75rem;
             margin-bottom: 1.5rem;
         }
 
-        .chart-label {
-            font-size: 0.75rem;
+        .toggle-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--slate-500);
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: var(--white);
+            color: var(--slate-900);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .domain-row {
+            margin-bottom: 2rem;
+        }
+
+        .domain-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .domain-name {
+            font-size: 0.85rem;
             font-weight: 800;
             color: var(--slate-700);
-            margin-bottom: 0.5rem;
-            display: block;
             text-transform: uppercase;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.05em;
         }
 
-        .bar-wrap {
-            height: 24px;
-            background: var(--slate-100);
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
+        .domain-shift {
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .bars-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .bar-group {
             display: flex;
             align-items: center;
+            gap: 1rem;
         }
 
-        .bar-before {
+        .bar-label {
+            font-size: 0.55rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--slate-400);
+            min-width: 45px;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 12px;
+            background: var(--slate-100);
+            border-radius: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
             height: 100%;
-            background: var(--slate-200);
-            transition: width 1s ease-out;
+            border-radius: 100px;
+            transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
             width: 0;
-            position: absolute;
-            left: 0;
         }
 
-        .bar-after {
-            height: 100%;
-            background: var(--primary);
-            transition: width 1s ease-out;
-            width: 0;
-            position: absolute;
-            left: 0;
-            opacity: 0.8;
-            border-right: 2px solid white;
-        }
+        .bar-fill.user { background: var(--slate-800); }
+        .bar-fill.cohort { background: var(--primary); }
 
-        .bar-after-inner {
-            height: 100%;
-            width: 100%;
-            background: var(--primary);
-        }
-
-        .bar-meta {
-            position: absolute;
-            right: 12px;
+        .bar-val {
             font-size: 0.6rem;
             font-weight: 900;
             color: var(--slate-500);
-            z-index: 10;
-        }
-
-        .shift-indicator {
-            font-size: 0.6rem;
-            font-weight: 900;
-            margin-top: 0.25rem;
-            display: inline-block;
+            min-width: 30px;
+            text-align: right;
         }
         .text-pos { color: var(--primary-dark); }
         .text-neg { color: #ef4444; }
@@ -494,51 +561,79 @@
     <!-- 4. Result Section -->
     <div id="section-result" class="section">
         <div class="result-header">
-            <div class="shift-badge">
-                <span class="shift-percent" id="total-shift-percent">+0%</span>
-                <span class="shift-label">Connection Shift</span>
+            <div class="shift-badges-wrap">
+                <div class="shift-badge">
+                    <span class="shift-percent" id="user-shift-percent">+0%</span>
+                    <span class="shift-label">Your Connection Shift</span>
+                </div>
+                <div class="shift-badge group">
+                    <span class="shift-percent" id="group-shift-percent">+0%</span>
+                    <span class="shift-label">Group Connection Shift</span>
+                    <div class="cohort-info" id="cohort-count">Based on 0 responses</div>
+                </div>
             </div>
-            <p class="prose" style="font-style: italic; font-size: 0.85rem; max-width: 300px; margin: 0 auto 2rem;">"Happiness Habits practiced together foster unity, connection, and community."</p>
+            <p class="prose" style="font-style: italic; font-size: 0.85rem; max-width: 350px; margin: 0 auto 2rem; text-align: center;">"Happiness Habits shared within a community amplify our collective resilience and belonging."</p>
         </div>
 
-        <div class="score-row">
+        <div class="result-grid">
             <div class="score-card">
-                <span class="score-lbl">Avg Before</span>
-                <span class="score-val" id="avg-before-score">0.0</span>
+                <span class="score-lbl">Your Avg Before</span>
+                <span class="score-val" id="user-avg-before">0%</span>
             </div>
-            <div class="score-card after">
-                <span class="score-lbl">Avg After</span>
-                <span class="score-val" id="avg-after-score">0.0</span>
+            <div class="score-card highlight">
+                <span class="score-lbl">Your Avg After</span>
+                <span class="score-val" id="user-avg-after">0%</span>
+            </div>
+            <div class="score-card">
+                <span class="score-lbl">Group Avg Before</span>
+                <span class="score-val" id="group-avg-before">0%</span>
+            </div>
+            <div class="score-card highlight">
+                <span class="score-lbl">Group Avg After</span>
+                <span class="score-val" id="group-avg-after">0%</span>
             </div>
         </div>
 
         <div class="card">
-            <h2 class="subtitle" style="margin-bottom: 1.5rem; display: block; border-bottom: 1px solid var(--slate-100); padding-bottom: 0.75rem;">Metrical Comparison</h2>
-            <div id="chart-display" class="chart-container">
-                <!-- Bars will be here -->
+            <div class="comparison-wrap">
+                <h2 class="subtitle" style="margin-bottom: 1rem; display: block; text-align: center;">Domain-by-Domain Analysis</h2>
+                
+                <div class="comparison-toggle">
+                    <button class="toggle-btn active" onclick="toggleView('user', this)">Your Results</button>
+                    <button class="toggle-btn" onclick="toggleView('cohort', this)">Group Results</button>
+                    <button class="toggle-btn" onclick="toggleView('compare', this)">Comparison</button>
+                </div>
+
+                <div id="domain-results-container">
+                    <!-- Domain bars will be rendered here dynamically -->
+                </div>
+            </div>
+
+            <div class="contact-group">
+                <span class="contact-name">Alexia Georghiou</span>
+                <a href="tel:0118652833605" class="contact-detail">011-865-283-3605</a>
+                <a href="mailto:alexia@knoxvillehappinesscoalition.com" class="contact-detail">alexia@knoxvillehappinesscoalition.com</a>
+                <a href="https://www.knoxvillehappinesscoalition.com" target="_blank" rel="noopener noreferrer" class="contact-detail">www.knoxvillehappinesscoalition.com</a>
             </div>
         </div>
 
-        <div class="contact-group">
-            <span class="contact-name">Alexia Georghiou</span>
-            <a href="tel:0118652833605" class="contact-detail">011-865-283-3605</a>
-            <a href="mailto:alexia@knoxvillehappinesscoalition.com" class="contact-detail">alexia@knoxvillehappinesscoalition.com</a>
-            <a href="https://www.knoxvillehappinesscoalition.com" target="_blank" rel="noopener noreferrer" class="contact-detail">www.knoxvillehappinesscoalition.com</a>
-            
-            <a href="https://knoxvillehappinesscoalition.github.io/happiness/" target="_blank" rel="noopener noreferrer" class="frame-btn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                I practice my happiness habits
-            </a>
-        </div>
-
-        <button class="btn btn-primary" onclick="downloadCSV()" style="margin-top: 2rem;">
+        <button class="btn btn-primary" onclick="downloadCSV()" style="margin-top: 1rem;">
             Download Results (CSV)
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </button>
 
-        <button class="btn btn-outline" onclick="resetApp()">
-            Reset Data
+        <a href="https://knoxvillehappinesscoalition.github.io/happiness/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: #166534; margin-top: 0.5rem;">
+            I practice my happiness habits
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </a>
+
+        <button class="btn btn-outline" onclick="resetApp()" style="margin-top: 0.5rem;">
+            Start New Session
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+
+        <button class="btn btn-outline" style="border-color: #fee2e2; color: #ef4444; margin-top: 0.5rem; opacity: 0.5;" onclick="clearAllData()">
+            Clear All Group Data
         </button>
     </div>
 </div>
@@ -557,19 +652,51 @@
         { id: 'presence', name: 'Shared Human Presence' }
     ];
 
+    const STORAGE_KEY = 'happiness_cohort_data_v1';
+
     // State
     const state = {
         before: {},
-        after: {}
+        after: {},
+        currentView: 'user' // 'user', 'cohort', 'compare'
     };
 
-    // Initialize state
+    // Initialize individual state
     DIMENSIONS.forEach(d => {
         state.before[d.id] = 5;
         state.after[d.id] = 5;
     });
 
-    // DOM Rendering
+    // --- Data Persistence ---
+
+    function getCohortData() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        try {
+            return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+            console.error("Error parsing cohort data", e);
+            return [];
+        }
+    }
+
+    function saveToCohort(data) {
+        const current = getCohortData();
+        current.push({
+            ...data,
+            timestamp: new Date().toISOString()
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+    }
+
+    function clearAllData() {
+        if (!confirm('This will DELETE ALL anonymous group results permanently. Are you sure?')) return;
+        localStorage.removeItem(STORAGE_KEY);
+        alert('Group data cleared.');
+        location.reload();
+    }
+
+    // --- DOM Rendering & Logic ---
+
     function renderInputs() {
         const beforeContainer = document.getElementById('before-inputs');
         const afterContainer = document.getElementById('after-inputs');
@@ -578,20 +705,14 @@
         afterContainer.innerHTML = '';
 
         DIMENSIONS.forEach(d => {
-            // Before Input
-            const bGroup = createInputGroup(d, 'before');
-            beforeContainer.appendChild(bGroup);
-
-            // After Input
-            const aGroup = createInputGroup(d, 'after');
-            afterContainer.appendChild(aGroup);
+            beforeContainer.appendChild(createInputGroup(d, 'before'));
+            afterContainer.appendChild(createInputGroup(d, 'after'));
         });
     }
 
     function createInputGroup(dimension, type) {
         const div = document.createElement('div');
         div.className = `input-group ${type}`;
-        
         div.innerHTML = `
             <div class="label-wrap">
                 <label>${dimension.name}</label>
@@ -615,108 +736,194 @@
     }
 
     function showSection(sectionId) {
-        // Scroll top
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(`section-${sectionId}`).classList.add('active');
     }
 
     function calculateAndShowResults() {
-        const beforeValues = Object.values(state.before);
-        const afterValues = Object.values(state.after);
-
-        const avgBefore = beforeValues.reduce((a, b) => a + b, 0) / DIMENSIONS.length;
-        const avgAfter = afterValues.reduce((a, b) => a + b, 0) / DIMENSIONS.length;
+        // Save user data to cohort
+        saveToCohort({ before: state.before, after: state.after });
         
-        const totalShift = ((avgAfter - avgBefore) / 10) * 100;
-        
-        // Update Summary
-        document.getElementById('avg-before-score').innerText = avgBefore.toFixed(1);
-        document.getElementById('avg-after-score').innerText = avgAfter.toFixed(1);
-        
-        const shiftBadge = document.getElementById('total-shift-percent');
-        shiftBadge.innerText = (totalShift >= 0 ? '+' : '') + totalShift.toFixed(1) + '%';
-
-        // Render Chart
-        const chart = document.getElementById('chart-display');
-        chart.innerHTML = '';
-
-        DIMENSIONS.forEach(d => {
-            const b = state.before[d.id];
-            const a = state.after[d.id];
-            const diff = a - b;
-            const diffPct = (diff / 10) * 100;
-
-            const row = document.createElement('div');
-            row.className = 'chart-row';
-            row.innerHTML = `
-                <span class="chart-label">${d.name}</span>
-                <div class="bar-wrap">
-                    <div class="bar-before" style="width: ${b * 10}%"></div>
-                    <div class="bar-after" style="width: ${a * 10}%"></div>
-                    <div class="bar-meta">B: ${b} | A: ${a}</div>
-                </div>
-                <div class="shift-indicator ${diff >= 0 ? 'text-pos' : 'text-neg'}">
-                    ${diff >= 0 ? '↑' : '↓'} ${diffPct.toFixed(0)}% Shift
-                </div>
-            `;
-            chart.appendChild(row);
-        });
-
+        // Render the results
+        updateResultsUI();
         showSection('result');
     }
 
-    function resetApp() {
-        if (!confirm('Are you sure you want to reset all data and start over?')) return;
+    function updateResultsUI() {
+        const cohort = getCohortData();
+        const count = cohort.length;
         
-        // Reset state
+        // Calculations
+        const userAvgB = Object.values(state.before).reduce((a, b) => a + b, 0) / DIMENSIONS.length;
+        const userAvgA = Object.values(state.after).reduce((a, b) => a + b, 0) / DIMENSIONS.length;
+        const userShift = ((userAvgA - userAvgB) / 10) * 100;
+
+        // Group Calculations
+        let groupAvgBTotal = 0;
+        let groupAvgATotal = 0;
+        const groupDomainAverages = DIMENSIONS.reduce((acc, d) => {
+            acc[d.id] = { b: 0, a: 0 };
+            return acc;
+        }, {});
+
+        cohort.forEach(entry => {
+            const eb = entry.before || {};
+            const ea = entry.after || {};
+            let entryBTotal = 0;
+            let entryATotal = 0;
+
+            DIMENSIONS.forEach(d => {
+                const valB = eb[d.id] ?? 5;
+                const valA = ea[d.id] ?? 5;
+                groupDomainAverages[d.id].b += valB;
+                groupDomainAverages[d.id].a += valA;
+                entryBTotal += valB;
+                entryATotal += valA;
+            });
+
+            groupAvgBTotal += (entryBTotal / DIMENSIONS.length);
+            groupAvgATotal += (entryATotal / DIMENSIONS.length);
+        });
+
+        const cohortAvgB = count > 0 ? groupAvgBTotal / count : 0;
+        const cohortAvgA = count > 0 ? groupAvgATotal / count : 0;
+        const groupShift = cohortAvgB > 0 || cohortAvgA > 0 ? ((cohortAvgA - cohortAvgB) / 10) * 100 : 0;
+
+        // Update Top Badges & Grid
+        document.getElementById('user-shift-percent').innerText = `${userShift >= 0 ? '+' : ''}${userShift.toFixed(1)}%`;
+        document.getElementById('group-shift-percent').innerText = `${groupShift >= 0 ? '+' : ''}${groupShift.toFixed(1)}%`;
+        document.getElementById('cohort-count').innerText = `Based on ${count} anonymous responses`;
+
+        document.getElementById('user-avg-before').innerText = `${(userAvgB * 10).toFixed(0)}%`;
+        document.getElementById('user-avg-after').innerText = `${(userAvgA * 10).toFixed(0)}%`;
+        document.getElementById('group-avg-before').innerText = `${(cohortAvgB * 10).toFixed(0)}%`;
+        document.getElementById('group-avg-after').innerText = `${(cohortAvgA * 10).toFixed(0)}%`;
+
+        // Render Domain Bars
+        renderDomainBars(state.currentView, cohortDomainAverages(cohort, count));
+    }
+
+    function cohortDomainAverages(cohort, count) {
+        const averages = {};
+        DIMENSIONS.forEach(d => {
+            let sumB = 0, sumA = 0;
+            cohort.forEach(entry => {
+                sumB += (entry.before?.[d.id] ?? 5);
+                sumA += (entry.after?.[d.id] ?? 5);
+            });
+            averages[d.id] = {
+                b: count > 0 ? sumB / count : 0,
+                a: count > 0 ? sumA / count : 0
+            };
+        });
+        return averages;
+    }
+
+    function renderDomainBars(view, cohortAvgs) {
+        const container = document.getElementById('domain-results-container');
+        container.innerHTML = '';
+
+        DIMENSIONS.forEach(d => {
+            const userB = state.before[d.id];
+            const userA = state.after[d.id];
+            const groupB = cohortAvgs[d.id].b;
+            const groupA = cohortAvgs[d.id].a;
+
+            const row = document.createElement('div');
+            row.className = 'domain-row';
+            
+            let shiftHtml = '';
+            if (view === 'user' || view === 'compare') {
+                const s = ((userA - userB) / 10) * 100;
+                shiftHtml = `<div class="domain-shift ${s >= 0 ? 'text-pos' : 'text-neg'}" style="background: ${s >= 0 ? '#f0fdf4' : '#fef2f2'}">${s >= 0 ? '↑' : '↓'} ${Math.abs(s).toFixed(0)}%</div>`;
+            } else if (view === 'cohort') {
+                const s = ((groupA - groupB) / 10) * 100;
+                shiftHtml = `<div class="domain-shift ${s >= 0 ? 'text-pos' : 'text-neg'}" style="background: ${s >= 0 ? '#f0fdf4' : '#fef2f2'}">${s >= 0 ? '↑' : '↓'} ${Math.abs(s).toFixed(0)}%</div>`;
+            }
+
+            let barsHtml = '';
+            if (view === 'user') {
+                barsHtml = `
+                    ${renderBar('Before', userB * 10, 'user')}
+                    ${renderBar('After', userA * 10, 'cohort')}
+                `;
+            } else if (view === 'cohort') {
+                barsHtml = `
+                    ${renderBar('Group B', groupB * 10, 'user')}
+                    ${renderBar('Group A', groupA * 10, 'cohort')}
+                `;
+            } else {
+                barsHtml = `
+                    ${renderBar('You', userA * 10, 'user')}
+                    ${renderBar('Group', groupA * 10, 'cohort')}
+                `;
+            }
+
+            row.innerHTML = `
+                <div class="domain-header">
+                    <span class="domain-name">${d.name}</span>
+                    ${shiftHtml}
+                </div>
+                <div class="bars-container">${barsHtml}</div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function renderBar(label, percent, typeClass) {
+        return `
+            <div class="bar-group">
+                <span class="bar-label">${label}</span>
+                <div class="bar-track">
+                    <div class="bar-fill ${typeClass}" style="width: ${percent}%"></div>
+                </div>
+                <span class="bar-val">${percent.toFixed(0)}%</span>
+            </div>
+        `;
+    }
+
+    function toggleView(view, btn) {
+        state.currentView = view;
+        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const cohort = getCohortData();
+        renderDomainBars(view, cohortDomainAverages(cohort, cohort.length));
+    }
+
+    function resetApp() {
+        if (!confirm('Start a new session? (Your current data is saved to group results)')) return;
         DIMENSIONS.forEach(d => {
             state.before[d.id] = 5;
             state.after[d.id] = 5;
         });
-        
         renderInputs();
         showSection('welcome');
     }
 
     function downloadCSV() {
-        const rows = [
-            ['Dimension', 'Before Rating', 'After Rating', 'Point Shift', 'Percentage Shift']
-        ];
-
+        const cohort = getCohortData();
+        const rows = [['Session Export', new Date().toLocaleString()]];
+        rows.push([]);
+        rows.push(['Dimension', 'Your Before (%)', 'Your After (%)', 'Individual Shift (%)']);
+        
         DIMENSIONS.forEach(d => {
-            const b = state.before[d.id];
-            const a = state.after[d.id];
-            const diff = a - b;
-            const diffPct = (diff / 10) * 100;
-            rows.push([
-                d.name,
-                b,
-                a,
-                diff,
-                `${diffPct.toFixed(1)}%`
-            ]);
+            const b = state.before[d.id] * 10;
+            const a = state.after[d.id] * 10;
+            rows.push([d.name, `${b}%`, `${a}%`, `${(a - b).toFixed(1)}%`]);
         });
 
-        // Add summary
-        const beforeValues = Object.values(state.before);
-        const afterValues = Object.values(state.after);
-        const avgBefore = beforeValues.reduce((a, b) => a + b, 0) / DIMENSIONS.length;
-        const avgAfter = afterValues.reduce((a, b) => a + b, 0) / DIMENSIONS.length;
-        const totalShift = ((avgAfter - avgBefore) / 10) * 100;
-
+        // Simplified Group stats
+        const count = cohort.length;
         rows.push([]);
-        rows.push(['Average Score', avgBefore.toFixed(1), avgAfter.toFixed(1), (avgAfter - avgBefore).toFixed(1), `${totalShift.toFixed(1)}%`]);
-        rows.push(['Timestamp', new Date().toISOString()]);
+        rows.push(['Group Context', `Based on ${count} anonymous responses`]);
 
-        const csvContent = "data:text/csv;charset=utf-8," 
-            + rows.map(e => e.join(",")).join("\n");
-
+        const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "connection_shift_results.csv");
+        link.setAttribute("download", "happiness_connection_results.csv");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
