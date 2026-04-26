@@ -363,6 +363,14 @@
             letter-spacing: 0.05em;
         }
 
+        .domain-desc {
+            font-size: 0.75rem;
+            color: var(--slate-500);
+            margin-top: 0.25rem;
+            line-height: 1.4;
+            display: block;
+        }
+
         .domain-shift {
             font-size: 0.7rem;
             font-weight: 900;
@@ -549,8 +557,8 @@
     <div id="section-welcome" class="section active">
         <div class="card">
             <div class="prose">
-                <p>Welcome to this shared experience. Connection is a fundamental habit for neuro-happiness and human belonging.</p>
-                <p>Before we begin, please take 30 seconds to rate your current experience across five dimensions. We will revisit these after the session to measure our connection shift.</p>
+                <p>Welcome to this shared experience. Connection is a fundamental habit for neuro-happiness and human unity.</p>
+                <p>Before we begin, please take 30 seconds to rate your current experience across four dimensions. We will revisit these after the session to measure our connection shift.</p>
             </div>
             <button class="btn btn-primary" onclick="showSection('before')">
                 Start "Before" Ratings
@@ -609,7 +617,7 @@
                     <div class="cohort-info" id="cohort-count">Based on 0 responses</div>
                 </div>
             </div>
-            <p class="prose" style="font-style: italic; font-size: 0.85rem; max-width: 350px; margin: 0 auto 2rem; text-align: center;">"Happiness Habits shared within a community amplify our shared resilience and belonging."</p>
+            <p class="prose" style="font-style: italic; font-size: 0.85rem; max-width: 350px; margin: 0 auto 2rem; text-align: center;">"Happiness Habits shared within a community amplify our shared resilience and connection."</p>
         </div>
 
         <div class="result-grid">
@@ -683,11 +691,26 @@
 <script>
     // Configuration
     const DIMENSIONS = [
-        { id: 'engagement', name: 'Engagement' },
-        { id: 'connection', name: 'Emotional Connection' },
-        { id: 'belonging', name: 'Sense of Belonging' },
-        { id: 'hope', name: 'Hopefulness' },
-        { id: 'presence', name: 'Shared Human Presence' }
+        { 
+            id: 'engagement', 
+            name: 'Engagement', 
+            desc: 'How involved, attentive, interested, or mentally present you feel.' 
+        },
+        { 
+            id: 'connection', 
+            name: 'Emotional Connection', 
+            desc: 'How emotionally connected you feel to the message, people, or experience.' 
+        },
+        { 
+            id: 'hope', 
+            name: 'Hopefulness', 
+            desc: 'How encouraged, optimistic, or positive you feel.' 
+        },
+        { 
+            id: 'presence', 
+            name: 'Shared Human Presence', 
+            desc: 'How aware you feel of being together with others in a meaningful human experience.' 
+        }
     ];
 
     const STORAGE_KEY = 'happiness_cohort_data_v1';
@@ -734,8 +757,8 @@
         if (!step2) return;
 
         localStorage.removeItem(STORAGE_KEY);
-        alert('All cohort data has been successfully cleared.');
-        location.reload();
+        alert('Group results reset for new session.');
+        updateResultsUI(); // Immediate update
     }
 
     // --- DOM Rendering & Logic ---
@@ -758,7 +781,10 @@
         div.className = `input-group ${type}`;
         div.innerHTML = `
             <div class="label-wrap">
-                <label>${dimension.name}</label>
+                <div>
+                    <label>${dimension.name}</label>
+                    <span class="domain-desc">${dimension.desc}</span>
+                </div>
                 <div class="val-display" id="val-${type}-${dimension.id}">${state[type][dimension.id]}</div>
             </div>
             <input type="range" min="0" max="10" step="1" 
@@ -893,8 +919,8 @@
                 `;
             } else if (view === 'cohort') {
                 barsHtml = `
-                    ${renderBar('Group B', groupB * 10, 'user')}
-                    ${renderBar('Group A', groupA * 10, 'cohort')}
+                    ${renderBar('Group Before', groupB * 10, 'user')}
+                    ${renderBar('Group After', groupA * 10, 'cohort')}
                 `;
             } else {
                 barsHtml = `
@@ -905,7 +931,10 @@
 
             row.innerHTML = `
                 <div class="domain-header">
-                    <span class="domain-name">${d.name}</span>
+                    <div>
+                        <span class="domain-name">${d.name}</span>
+                        <span class="domain-desc">${d.desc}</span>
+                    </div>
                     ${shiftHtml}
                 </div>
                 <div class="bars-container">${barsHtml}</div>
@@ -936,11 +965,12 @@
     }
 
     function resetApp() {
-        if (!confirm('Start a new session? (Your current data is saved to group results)')) return;
+        if (!confirm('Start a new session? (Your current individual progress will be reset)')) return;
         DIMENSIONS.forEach(d => {
             state.before[d.id] = 5;
             state.after[d.id] = 5;
         });
+        state.currentView = 'user';
         renderInputs();
         showSection('welcome');
     }
