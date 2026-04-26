@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Happiness Habits - Connection Shift</title>
+    <title>The Happiness Habits - Connection Meter</title>
     <style>
         :root {
-            --primary: #10b981; /* Emerald 500 */
+            --primary: #10b981;
             --primary-dark: #059669;
             --slate-50: #f8fafc;
             --slate-100: #f1f5f9;
             --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
             --slate-400: #94a3b8;
             --slate-500: #64748b;
             --slate-600: #475569;
@@ -18,15 +19,10 @@
             --slate-800: #1e293b;
             --slate-900: #0f172a;
             --white: #ffffff;
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: var(--font-sans);
@@ -47,497 +43,87 @@
             flex: 1;
         }
 
-        /* Typography */
-        header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
+        header { text-align: center; margin-bottom: 2.5rem; }
         .brand {
-            font-size: 0.65rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.4em;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            display: block;
+            font-size: 0.65rem; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.4em; color: var(--primary); margin-bottom: 0.5rem; display: block;
         }
-
         h1 {
-            font-size: 1.75rem;
-            font-weight: 900;
-            font-style: italic;
-            letter-spacing: -0.02em;
-            color: var(--slate-900);
-            line-height: 1.1;
-            margin-bottom: 0.5rem;
+            font-size: 1.75rem; font-weight: 900; font-style: italic;
+            letter-spacing: -0.02em; color: var(--slate-900); line-height: 1.1; margin-bottom: 0.5rem;
         }
 
-        .subtitle {
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            color: var(--slate-400);
-        }
+        .section { display: none; animation: fadeIn 0.4s ease-out forwards; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Sections */
-        .section {
-            display: none;
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Card Style */
         .card {
-            background: var(--white);
-            border-radius: 2rem;
-            padding: 2.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
-            border: 1px solid var(--slate-200);
-            margin-bottom: 2rem;
+            background: var(--white); border-radius: 2rem; padding: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--slate-200);
+            margin-bottom: 2rem; position: relative;
         }
 
-        /* Sliders */
-        .input-group {
-            margin-bottom: 2rem;
-        }
-
-        .label-wrap {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-            gap: 1rem;
-        }
-
-        label {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--slate-700);
-            line-height: 1.4;
-        }
-
-        .val-display {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--slate-300);
-            min-width: 2.5rem;
-            text-align: right;
-            line-height: 1;
-        }
-
-        .input-group.after .val-display {
-            color: var(--primary);
-        }
+        .input-group { margin-bottom: 2rem; }
+        .label-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; gap: 1rem; }
+        label { font-size: 0.95rem; font-weight: 700; color: var(--slate-700); line-height: 1.4; }
+        .domain-desc { font-size: 0.75rem; color: var(--slate-500); margin-top: 0.25rem; line-height: 1.4; display: block; font-weight: normal; }
+        .val-display { font-size: 2rem; font-weight: 900; color: var(--slate-300); min-width: 2.5rem; text-align: right; line-height: 1; }
+        .input-group.after .val-display { color: var(--primary); }
 
         input[type="range"] {
-            width: 100%;
-            height: 6px;
-            background: var(--slate-100);
-            border-radius: 10px;
-            outline: none;
-            -webkit-appearance: none;
-            cursor: pointer;
+            width: 100%; height: 6px; background: var(--slate-100); border-radius: 10px; outline: none; -webkit-appearance: none; cursor: pointer;
         }
-
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
-            background: var(--slate-400);
-            border: 4px solid var(--white);
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            -webkit-appearance: none; width: 22px; height: 22px; background: var(--slate-400);
+            border: 4px solid var(--white); border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
+        .input-group.after input[type="range"]::-webkit-slider-thumb { background: var(--primary); }
 
-        .input-group.after input[type="range"]::-webkit-slider-thumb {
-            background: var(--primary);
-        }
+        .range-labels { display: flex; justify-content: space-between; font-size: 0.65rem; font-weight: 800; color: var(--slate-400); margin-top: 0.75rem; }
 
-        .range-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--slate-400);
-            margin-top: 0.75rem;
-        }
-
-        /* Buttons */
         .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 1.25rem;
-            border-radius: 1.25rem;
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            text-decoration: none;
-            gap: 0.5rem;
+            display: flex; align-items: center; justify-content: center; width: 100%; padding: 1.25rem;
+            border-radius: 1.25rem; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.15em; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; gap: 0.5rem;
         }
-
-        .btn-primary {
-            background: var(--slate-900);
-            color: var(--white);
-            box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            background: var(--slate-800);
-        }
-
-        .btn-outline {
-            background: var(--white);
-            border: 1px solid var(--slate-200);
-            color: var(--slate-600);
-            margin-top: 1rem;
-        }
-
-        .btn-outline:hover {
-            background: var(--slate-50);
-            color: var(--slate-900);
-        }
-
-        /* Results Visualization */
-        .result-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .shift-badges-wrap {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
+        .btn-primary { background: var(--slate-900); color: var(--white); box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.3); }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-outline { background: var(--white); border: 1px solid var(--slate-200); color: var(--slate-600); margin-top: 1rem; }
 
         .shift-badge {
-            background: var(--slate-900);
-            color: var(--white);
-            display: inline-block;
-            padding: 1rem 1.5rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            width: 100%;
-            max-width: 280px;
+            background: var(--slate-900); color: var(--white); padding: 1rem 1.5rem; border-radius: 1.5rem; text-align: center;
+            width: 100%; max-width: 280px; margin: 0 auto 2rem;
         }
+        .shift-badge.group { background: var(--primary); }
+        .shift-percent { font-size: 2.25rem; font-weight: 900; display: block; line-height: 1; margin-bottom: 0.25rem; }
+        .shift-label { font-size: 0.55rem; text-transform: uppercase; font-weight: 800; letter-spacing: 0.2em; opacity: 0.7; }
 
-        .shift-badge.group {
-            background: var(--primary);
-            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
-        }
+        .score-card { background: var(--white); padding: 1rem; border-radius: 1rem; text-align: center; border: 1px solid var(--slate-200); flex: 1; }
+        .score-card.highlight { border-color: var(--primary); background: #f0fdf4; }
+        .score-val { font-size: 1.25rem; font-weight: 900; display: block; color: var(--slate-800); }
+        .score-lbl { font-size: 0.55rem; font-weight: 800; text-transform: uppercase; color: var(--slate-400); }
 
-        .shift-percent {
-            font-size: 2.25rem;
-            font-weight: 900;
-            display: block;
-            line-height: 1;
-            margin-bottom: 0.25rem;
-        }
-
-        .shift-label {
-            font-size: 0.55rem;
-            text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 0.2em;
-            color: rgba(255,255,255,0.6);
-        }
-
-        .shift-badge.group .shift-label {
-            color: rgba(255,255,255,0.8);
-        }
-
-        .cohort-info {
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--slate-400);
-            margin-top: 0.5rem;
-        }
-
-        .result-grid {
-            display: grid;
-            grid-template-cols: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .score-card {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            border: 1px solid var(--slate-200);
-        }
-
-        .score-card.highlight {
-            border-color: var(--primary);
-            background: #f0fdf4;
-        }
-
-        .score-val {
-            font-size: 1.5rem;
-            font-weight: 900;
-            display: block;
-            color: var(--slate-800);
-        }
-
-        .score-lbl {
-            font-size: 0.55rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--slate-400);
-        }
-
-        /* Comparison Chart */
-        .comparison-wrap {
-            margin-bottom: 2rem;
-        }
-
-        .comparison-toggle {
-            display: flex;
-            background: var(--slate-100);
-            padding: 0.25rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .toggle-btn {
-            flex: 1;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            color: var(--slate-500);
-            transition: all 0.2s;
-        }
-
-        .toggle-btn.active {
-            background: var(--white);
-            color: var(--slate-900);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .domain-row {
-            margin-bottom: 2rem;
-        }
-
-        .domain-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-        }
-
-        .domain-name {
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: var(--slate-700);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .domain-desc {
-            font-size: 0.75rem;
-            color: var(--slate-500);
-            margin-top: 0.25rem;
-            line-height: 1.4;
-            display: block;
-        }
-
-        .domain-shift {
-            font-size: 0.7rem;
-            font-weight: 900;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.5rem;
-        }
-
-        .bars-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .bar-group {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .bar-label {
-            font-size: 0.55rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: var(--slate-400);
-            min-width: 45px;
-        }
-
-        .bar-track {
-            flex: 1;
-            height: 12px;
-            background: var(--slate-100);
-            border-radius: 100px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .bar-fill {
-            height: 100%;
-            border-radius: 100px;
-            transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-            width: 0;
-        }
-
+        .bar-track { flex: 1; height: 10px; background: var(--slate-100); border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; transition: width 1s ease; }
         .bar-fill.user { background: var(--slate-800); }
         .bar-fill.cohort { background: var(--primary); }
 
-        .bar-val {
-            font-size: 0.6rem;
-            font-weight: 900;
-            color: var(--slate-500);
-            min-width: 30px;
-            text-align: right;
-        }
-        .text-pos { color: var(--primary-dark); }
-        .text-neg { color: #ef4444; }
-
-        /* Contact Footer Group */
-        .contact-group {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--slate-100);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .contact-name {
-            font-size: 0.85rem;
-            font-weight: 900;
-            color: var(--slate-900);
-        }
-
-        .contact-detail {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--slate-500);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .contact-detail:hover {
-            color: var(--primary);
-        }
-
-        .frame-btn {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            margin-top: 1rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            font-size: 0.65rem;
-            letter-spacing: 0.1em;
-            padding: 1rem;
-            border-radius: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .frame-btn:hover {
-            background: #dcfce7;
-            transform: scale(1.02);
-        }
-
-        /* Welcome text */
-        .prose {
-            color: var(--slate-600);
-            font-size: 0.95rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .prose p { margin-bottom: 1rem; }
+        .domain-row { margin-bottom: 1.5rem; }
+        .domain-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .domain-name { font-size: 0.8rem; font-weight: 800; color: var(--slate-700); text-transform: uppercase; }
 
         footer {
-            padding: 3rem 1.5rem;
-            text-align: center;
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.25em;
-            color: var(--slate-400);
-        }
-
-        @media (max-width: 480px) {
-            .container { padding: 1.5rem 1rem; }
-            .card { padding: 1.5rem; }
-            h1 { font-size: 1.5rem; }
-        }
-        .admin-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            padding: 3rem 1.5rem; text-align: center; font-size: 0.65rem; font-weight: 800;
+            color: var(--slate-400); display: flex; align-items: center; justify-content: center; gap: 0.5rem;
         }
 
         .admin-reset-icon {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--slate-300);
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s;
-            background: transparent;
-            border: none;
-            padding: 0;
-            opacity: 0.4;
+            width: 20px; height: 20px; display: none; align-items: center; justify-content: center;
+            color: var(--slate-300); cursor: pointer; border-radius: 4px; border: none; background: transparent; opacity: 0.5;
         }
+        .admin-reset-icon:hover { color: #ef4444; opacity: 1; }
 
-        .admin-reset-icon:hover {
-            color: #ef4444;
-            opacity: 1;
-        }
-
-        .admin-reset-icon svg {
-            width: 14px;
-            height: 14px;
-        }
+        @media (max-width: 480px) { h1 { font-size: 1.5rem; } .card { padding: 1.5rem; } }
     </style>
 </head>
 <body>
@@ -546,34 +132,28 @@
     <header>
         <span class="brand">Alexia Georghiou</span>
         <h1>THE CONNECTION METER</h1>
-        <span class="subtitle">The Happiness Habits Method</span>
+        <p class="subtitle" style="margin-top: 0.5rem;">The Happiness Habits Method</p>
     </header>
 
-    <!-- 1. Welcome Section -->
+    <!-- Welcome -->
     <div id="section-welcome" class="section active">
         <div class="card">
-            <div class="prose">
-                <p>Welcome to this shared experience. Connection is a fundamental habit for neuro-happiness and human unity.</p>
-                <p>Before we begin, please take 30 seconds to rate your current experience across four dimensions. We will revisit these after the session to measure our connection shift.</p>
+            <div style="color: var(--slate-600); line-height: 1.6; margin-bottom: 2rem;">
+                <p style="margin-bottom: 1rem;">Welcome to this shared experience. Connection is a fundamental habit for neuro-happiness and human unity.</p>
+                <p>Before we begin, please take a moment to rate your current experience across four dimensions. We will revisit these after the session to measure our connection shift.</p>
             </div>
             <button class="btn btn-primary" onclick="showSection('before')">
-                Start "Before" Ratings
+                Start "Before we begin"
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
         </div>
     </div>
 
-    <!-- 2. Before Section -->
+    <!-- Before -->
     <div id="section-before" class="section">
         <div class="card">
-            <div class="prose" style="margin-bottom: 2.5rem; text-align: center;">
-                <p><strong>Before Experience:</strong> Rate your current state in the room right now.</p>
-            </div>
-
-            <div id="before-inputs">
-                <!-- Template for inputs will be rendered here -->
-            </div>
-
+            <h2 style="font-size: 0.9rem; text-align: center; margin-bottom: 2rem; color: var(--slate-700);"><strong>Before we begin:</strong> Rate your current state</h2>
+            <div id="before-inputs"></div>
             <button class="btn btn-primary" onclick="showSection('after')" style="margin-top: 1rem;">
                 Next
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -581,426 +161,211 @@
         </div>
     </div>
 
-    <!-- 3. After Section -->
+    <!-- After -->
     <div id="section-after" class="section">
         <div class="card">
-            <div class="prose" style="margin-bottom: 2.5rem; text-align: center;">
-                <p><strong>After Experience:</strong> Reflect on your state now that we have finished.</p>
-            </div>
-
-            <div id="after-inputs">
-                <!-- Template for inputs will be rendered here -->
-            </div>
-
-            <button class="btn btn-primary" onclick="calculateAndShowResults()" style="margin-top: 1rem;">
+            <h2 style="font-size: 0.9rem; text-align: center; margin-bottom: 2rem; color: var(--slate-700);"><strong>After we finish:</strong> Reflect on your state</h2>
+            <div id="after-inputs"></div>
+            <button class="btn btn-primary" onclick="processResults()" style="margin-top: 1rem;">
                 Generate Connection Shift
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             </button>
         </div>
     </div>
 
-    <!-- 4. Result Section -->
+    <!-- Result -->
     <div id="section-result" class="section">
-        <div class="result-header">
-            <div class="shift-badges-wrap">
-                <div class="shift-badge">
-                    <span class="shift-percent" id="user-shift-percent">+0%</span>
-                    <span class="shift-label">Your Connection Shift</span>
-                </div>
-                <div class="shift-badge group">
-                    <span class="shift-percent" id="group-shift-percent">+0%</span>
-                    <span class="shift-label">Group Connection Shift</span>
-                    <div class="cohort-info" id="cohort-count">Based on 0 responses</div>
-                </div>
-            </div>
-            <p class="prose" style="font-style: italic; font-size: 0.85rem; max-width: 350px; margin: 0 auto 2rem; text-align: center;">"Happiness Habits shared within a community amplify our shared resilience and connection."</p>
+        <div class="shift-badge">
+            <span class="shift-percent" id="user-shift-percent">+0%</span>
+            <span class="shift-label">Your Connection Shift</span>
         </div>
 
-        <div class="result-grid">
-            <div class="score-card">
-                <span class="score-lbl">Your Avg Before</span>
-                <span class="score-val" id="user-avg-before">0%</span>
-            </div>
-            <div class="score-card highlight">
-                <span class="score-lbl">Your Avg After</span>
-                <span class="score-val" id="user-avg-after">0%</span>
-            </div>
-            <div class="score-card">
-                <span class="score-lbl">Group Avg Before</span>
-                <span class="score-val" id="group-avg-before">0%</span>
-            </div>
-            <div class="score-card highlight">
-                <span class="score-lbl">Group Avg After</span>
-                <span class="score-val" id="group-avg-after">0%</span>
+        <div class="card">
+            <h3 style="font-size: 0.7rem; text-transform: uppercase; text-align: center; margin-bottom: 1rem; color: var(--slate-500);">Your Individual Scores</h3>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="score-card"><span class="score-lbl">Avg Before</span><span class="score-val" id="u-avg-b">0%</span></div>
+                <div class="score-card highlight"><span class="score-lbl">Avg After</span><span class="score-val" id="u-avg-a">0%</span></div>
             </div>
         </div>
 
         <div class="card">
-            <div class="comparison-wrap">
-                <h2 class="subtitle" style="margin-bottom: 1rem; display: block; text-align: center;">Domain-by-Domain Analysis</h2>
-                
-                <div class="comparison-toggle">
-                    <button class="toggle-btn active" onclick="toggleView('user', this)">Your Results</button>
-                    <button class="toggle-btn" onclick="toggleView('cohort', this)">Group Results</button>
-                    <button class="toggle-btn" onclick="toggleView('compare', this)">Comparison</button>
+            <h3 style="font-size: 0.7rem; text-transform: uppercase; text-align: center; margin-bottom: 1rem; color: var(--slate-500);">Group Results</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <span class="score-lbl" style="display: block; text-align: center; margin-bottom: 0.5rem;">Before</span>
+                    <div id="g-b-list" style="font-size: 0.65rem; color: var(--slate-600);"></div>
+                    <div class="score-card" style="margin-top: 0.5rem;"><span class="score-val" id="g-avg-b">0%</span></div>
                 </div>
-
-                <div id="domain-results-container">
-                    <!-- Domain bars will be rendered here dynamically -->
+                <div>
+                    <span class="score-lbl" style="display: block; text-align: center; margin-bottom: 0.5rem;">After</span>
+                    <div id="g-a-list" style="font-size: 0.65rem; color: var(--slate-600);"></div>
+                    <div class="score-card highlight" style="margin-top: 0.5rem;"><span class="score-val" id="g-avg-a">0%</span></div>
                 </div>
             </div>
-
-            <div class="contact-group">
-                <span class="contact-name">Alexia Georghiou</span>
-                <a href="tel:0118652833605" class="contact-detail">011-865-283-3605</a>
-                <a href="mailto:alexia@knoxvillehappinesscoalition.com" class="contact-detail">alexia@knoxvillehappinesscoalition.com</a>
-                <a href="https://www.knoxvillehappinesscoalition.com" target="_blank" rel="noopener noreferrer" class="contact-detail">www.knoxvillehappinesscoalition.com</a>
+            <div class="shift-badge group" style="max-width: 220px; padding: 0.75rem;">
+                <span class="shift-percent" id="g-shift" style="font-size: 1.5rem;">+0%</span>
+                <span class="shift-label">Group Connection Shift</span>
+                <div id="g-count" style="font-size: 0.5rem; opacity: 0.8; margin-top: 0.25rem;">0 responses</div>
             </div>
         </div>
 
-        <button class="btn btn-primary" onclick="downloadCSV()" style="margin-top: 1rem;">
-            Download Results (CSV)
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        </button>
+        <div class="card">
+            <div id="domain-bars"></div>
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--slate-100); text-align: center;">
+                <p style="font-weight: 800; font-size: 0.8rem; color: var(--slate-900);">Alexia Georghiou</p>
+                <p style="font-size: 0.7rem; color: var(--slate-500); margin-top: 0.25rem;">
+                    <a href="mailto:alexia@knoxvillehappinesscoalition.com" style="color: inherit; text-decoration: none;">alexia@knoxvillehappinesscoalition.com</a><br>
+                    <a href="https://www.knoxvillehappinesscoalition.com" target="_blank" style="color: inherit; text-decoration: none;">www.knoxvillehappinesscoalition.com</a>
+                </p>
+            </div>
+        </div>
 
-        <a href="https://knoxvillehappinesscoalition.github.io/happiness/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: #166534; margin-top: 0.5rem;">
+        <a href="https://knoxvillehappinesscoalition.github.io/happiness/" class="btn btn-primary" style="background: #166534; margin-bottom: 1rem;">
             I practice my happiness habits
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         </a>
-
-        <div class="admin-controls">
-            <button class="btn btn-outline" onclick="resetApp()" style="margin-top: 0; flex: 1;">
-                Start New Session
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-            </button>
-            <button class="admin-reset-icon" onclick="clearAllData()" title="Admin reset group data" aria-label="Admin reset group data">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m14.5 9-5 5"/><path d="m9.5 9 5 5"/></svg>
-            </button>
-        </div>
+        <button class="btn btn-outline" onclick="resetApp()">Start New Session</button>
     </div>
 </div>
 
 <footer>
-    &copy; 2026 Knoxville Happiness Coalition
+    <span>&copy; 2026 Knoxville Happiness Coalition</span>
+    <button id="admin-reset" class="admin-reset-icon" onclick="clearGroupData()" title="Admin reset group data">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m14.5 9-5 5"/><path d="m9.5 9 5 5"/></svg>
+    </button>
 </footer>
 
 <script>
-    // Configuration
     const DIMENSIONS = [
-        { 
-            id: 'engagement', 
-            name: 'Engagement', 
-            desc: 'How involved, attentive, interested, or mentally present you feel.' 
-        },
-        { 
-            id: 'connection', 
-            name: 'Emotional Connection', 
-            desc: 'How emotionally connected you feel to the message, people, or experience.' 
-        },
-        { 
-            id: 'hope', 
-            name: 'Hopefulness', 
-            desc: 'How encouraged, optimistic, or positive you feel.' 
-        },
-        { 
-            id: 'presence', 
-            name: 'Shared Human Presence', 
-            desc: 'How aware you feel of being together with others in a meaningful human experience.' 
-        }
+        { id: 'eng', name: 'Engagement', desc: 'How involved, attentive, interested, or mentally present you feel.' },
+        { id: 'con', name: 'Emotional Connection', desc: 'How emotionally connected you feel to the message, people, or experience.' },
+        { id: 'hop', name: 'Hopefulness', desc: 'How encouraged, optimistic, or positive you feel.' },
+        { id: 'pre', name: 'Shared Human Presence', desc: 'How aware you feel of being together with others in a meaningful human experience.' }
     ];
 
-    const STORAGE_KEY = 'happiness_cohort_data_v1';
+    const STORAGE_KEY = 'happiness_v1';
+    let userState = { before: {}, after: {} };
+    DIMENSIONS.forEach(d => { userState.before[d.id] = 5; userState.after[d.id] = 5; });
 
-    // State
-    const state = {
-        before: {},
-        after: {},
-        currentView: 'user' // 'user', 'cohort', 'compare'
-    };
-
-    // Initialize individual state
-    DIMENSIONS.forEach(d => {
-        state.before[d.id] = 5;
-        state.after[d.id] = 5;
-    });
-
-    // --- Data Persistence ---
-
-    function getCohortData() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        try {
-            return raw ? JSON.parse(raw) : [];
-        } catch (e) {
-            console.error("Error parsing cohort data", e);
-            return [];
-        }
-    }
-
-    function saveToCohort(data) {
-        const current = getCohortData();
-        current.push({
-            ...data,
-            timestamp: new Date().toISOString()
-        });
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
-    }
-
-    function clearAllData() {
-        const step1 = confirm('ADMIN ACTION: This will permanently DELETE ALL anonymous group results for this cohort. Proceed?');
-        if (!step1) return;
-        
-        const step2 = confirm('FINAL WARNING: This action cannot be undone. Are you absolutely certain you want to clear the group metrics?');
-        if (!step2) return;
-
-        localStorage.removeItem(STORAGE_KEY);
-        alert('Group results reset for new session.');
-        updateResultsUI(); // Immediate update
-    }
-
-    // --- DOM Rendering & Logic ---
-
-    function renderInputs() {
-        const beforeContainer = document.getElementById('before-inputs');
-        const afterContainer = document.getElementById('after-inputs');
-        
-        beforeContainer.innerHTML = '';
-        afterContainer.innerHTML = '';
-
-        DIMENSIONS.forEach(d => {
-            beforeContainer.appendChild(createInputGroup(d, 'before'));
-            afterContainer.appendChild(createInputGroup(d, 'after'));
-        });
-    }
-
-    function createInputGroup(dimension, type) {
-        const div = document.createElement('div');
-        div.className = `input-group ${type}`;
-        div.innerHTML = `
-            <div class="label-wrap">
-                <div>
-                    <label>${dimension.name}</label>
-                    <span class="domain-desc">${dimension.desc}</span>
-                </div>
-                <div class="val-display" id="val-${type}-${dimension.id}">${state[type][dimension.id]}</div>
-            </div>
-            <input type="range" min="0" max="10" step="1" 
-                   value="${state[type][dimension.id]}" 
-                   oninput="updateValue('${type}', '${dimension.id}', this.value)">
-            <div class="range-labels">
-                <span>0</span>
-                <span>5</span>
-                <span>10</span>
-            </div>
-        `;
-        return div;
-    }
-
-    function updateValue(type, id, val) {
-        state[type][id] = parseInt(val);
-        document.getElementById(`val-${type}-${id}`).innerText = val;
-    }
-
-    function showSection(sectionId) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(`section-${sectionId}`).classList.add('active');
+        document.getElementById(`section-${id}`).classList.add('active');
+        document.getElementById('admin-reset').style.display = (id === 'result') ? 'flex' : 'none';
+        window.scrollTo(0,0);
     }
 
-    function calculateAndShowResults() {
-        // Save user data to cohort
-        saveToCohort({ before: state.before, after: state.after });
-        
-        // Render the results
-        updateResultsUI();
+    function createInputs() {
+        ['before', 'after'].forEach(type => {
+            const container = document.getElementById(`${type}-inputs`);
+            container.innerHTML = '';
+            DIMENSIONS.forEach(d => {
+                const group = document.createElement('div');
+                group.className = `input-group ${type}`;
+                group.innerHTML = `
+                    <div class="label-wrap">
+                        <div><label>${d.name}</label><span class="domain-desc">${d.desc}</span></div>
+                        <div class="val-display" id="v-${type}-${d.id}">${userState[type][d.id]}</div>
+                    </div>
+                    <input type="range" min="0" max="10" value="${userState[type][d.id]}" oninput="updateVal('${type}','${d.id}',this.value)">
+                    <div class="range-labels"><span>0</span><span>5</span><span>10</span></div>
+                `;
+                container.appendChild(group);
+            });
+        });
+    }
+
+    function updateVal(type, id, val) {
+        userState[type][id] = parseInt(val);
+        document.getElementById(`v-${type}-${id}`).innerText = val;
+    }
+
+    function processResults() {
+        let cohort = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        cohort.push({ before: userState.before, after: userState.after });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cohort));
+        renderResults();
         showSection('result');
     }
 
-    function updateResultsUI() {
-        const cohort = getCohortData();
+    function renderResults() {
+        const uB = Object.values(userState.before).reduce((a,b)=>a+b,0)/4;
+        const uA = Object.values(userState.after).reduce((a,b)=>a+b,0)/4;
+        const uShift = ((uA - uB)/10)*100;
+        
+        document.getElementById('user-shift-percent').innerText = `${uShift>=0?'+':''}${uShift.toFixed(1)}%`;
+        document.getElementById('u-avg-b').innerText = (uB*10).toFixed(0)+'%';
+        document.getElementById('u-avg-a').innerText = (uA*10).toFixed(0)+'%';
+
+        const cohort = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const count = cohort.length;
+        const cAvg = DIMENSIONS.reduce((acc,d) => { acc[d.id]={b:0,a:0}; return acc; }, {});
         
-        // Calculations
-        const userAvgB = Object.values(state.before).reduce((a, b) => a + b, 0) / DIMENSIONS.length;
-        const userAvgA = Object.values(state.after).reduce((a, b) => a + b, 0) / DIMENSIONS.length;
-        const userShift = ((userAvgA - userAvgB) / 10) * 100;
-
-        // Group Calculations
-        let groupAvgBTotal = 0;
-        let groupAvgATotal = 0;
-        const groupDomainAverages = DIMENSIONS.reduce((acc, d) => {
-            acc[d.id] = { b: 0, a: 0 };
-            return acc;
-        }, {});
-
         cohort.forEach(entry => {
-            const eb = entry.before || {};
-            const ea = entry.after || {};
-            let entryBTotal = 0;
-            let entryATotal = 0;
-
             DIMENSIONS.forEach(d => {
-                const valB = eb[d.id] ?? 5;
-                const valA = ea[d.id] ?? 5;
-                groupDomainAverages[d.id].b += valB;
-                groupDomainAverages[d.id].a += valA;
-                entryBTotal += valB;
-                entryATotal += valA;
+                cAvg[d.id].b += (entry.before[d.id] || 0);
+                cAvg[d.id].a += (entry.after[d.id] || 0);
             });
-
-            groupAvgBTotal += (entryBTotal / DIMENSIONS.length);
-            groupAvgATotal += (entryATotal / DIMENSIONS.length);
         });
 
-        const cohortAvgB = count > 0 ? groupAvgBTotal / count : 0;
-        const cohortAvgA = count > 0 ? groupAvgATotal / count : 0;
-        const groupShift = cohortAvgB > 0 || cohortAvgA > 0 ? ((cohortAvgA - cohortAvgB) / 10) * 100 : 0;
+        if (count > 0) {
+            DIMENSIONS.forEach(d => { cAvg[d.id].b /= count; cAvg[d.id].a /= count; });
+        }
 
-        // Update Top Badges & Grid
-        document.getElementById('user-shift-percent').innerText = `${userShift >= 0 ? '+' : ''}${userShift.toFixed(1)}%`;
-        document.getElementById('group-shift-percent').innerText = `${groupShift >= 0 ? '+' : ''}${groupShift.toFixed(1)}%`;
-        document.getElementById('cohort-count').innerText = `Based on ${count} anonymous responses`;
+        const cB = Object.values(cAvg).reduce((a,v)=>a+v.b,0)/4;
+        const cA = Object.values(cAvg).reduce((a,v)=>a+v.a,0)/4;
+        const cShift = count > 0 ? ((cA - cB)/10)*100 : 0;
 
-        document.getElementById('user-avg-before').innerText = `${(userAvgB * 10).toFixed(0)}%`;
-        document.getElementById('user-avg-after').innerText = `${(userAvgA * 10).toFixed(0)}%`;
-        document.getElementById('group-avg-before').innerText = `${(cohortAvgB * 10).toFixed(0)}%`;
-        document.getElementById('group-avg-after').innerText = `${(cohortAvgA * 10).toFixed(0)}%`;
+        document.getElementById('g-avg-b').innerText = (cB*10).toFixed(0)+'%';
+        document.getElementById('g-avg-a').innerText = (cA*10).toFixed(0)+'%';
+        document.getElementById('g-shift').innerText = `${cShift>=0?'+':''}${cShift.toFixed(1)}%`;
+        document.getElementById('g-count').innerText = `${count} responses`;
 
-        // Render Domain Bars
-        renderDomainBars(state.currentView, cohortDomainAverages(cohort, count));
-    }
-
-    function cohortDomainAverages(cohort, count) {
-        const averages = {};
-        DIMENSIONS.forEach(d => {
-            let sumB = 0, sumA = 0;
-            cohort.forEach(entry => {
-                sumB += (entry.before?.[d.id] ?? 5);
-                sumA += (entry.after?.[d.id] ?? 5);
-            });
-            averages[d.id] = {
-                b: count > 0 ? sumB / count : 0,
-                a: count > 0 ? sumA / count : 0
-            };
+        ['b', 'a'].forEach(t => {
+            document.getElementById(`g-${t}-list`).innerHTML = DIMENSIONS.map(d => 
+                `<div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span>${d.name}</span><b>${(cAvg[d.id][t]*10).toFixed(0)}%</b></div>`
+            ).join('');
         });
-        return averages;
-    }
 
-    function renderDomainBars(view, cohortAvgs) {
-        const container = document.getElementById('domain-results-container');
-        container.innerHTML = '';
-
-        DIMENSIONS.forEach(d => {
-            const userB = state.before[d.id];
-            const userA = state.after[d.id];
-            const groupB = cohortAvgs[d.id].b;
-            const groupA = cohortAvgs[d.id].a;
-
-            const row = document.createElement('div');
-            row.className = 'domain-row';
-            
-            let shiftHtml = '';
-            if (view === 'user' || view === 'compare') {
-                const s = ((userA - userB) / 10) * 100;
-                shiftHtml = `<div class="domain-shift ${s >= 0 ? 'text-pos' : 'text-neg'}" style="background: ${s >= 0 ? '#f0fdf4' : '#fef2f2'}">${s >= 0 ? '↑' : '↓'} ${Math.abs(s).toFixed(0)}%</div>`;
-            } else if (view === 'cohort') {
-                const s = ((groupA - groupB) / 10) * 100;
-                shiftHtml = `<div class="domain-shift ${s >= 0 ? 'text-pos' : 'text-neg'}" style="background: ${s >= 0 ? '#f0fdf4' : '#fef2f2'}">${s >= 0 ? '↑' : '↓'} ${Math.abs(s).toFixed(0)}%</div>`;
-            }
-
-            let barsHtml = '';
-            if (view === 'user') {
-                barsHtml = `
-                    ${renderBar('Before', userB * 10, 'user')}
-                    ${renderBar('After', userA * 10, 'cohort')}
-                `;
-            } else if (view === 'cohort') {
-                barsHtml = `
-                    ${renderBar('Group Before', groupB * 10, 'user')}
-                    ${renderBar('Group After', groupA * 10, 'cohort')}
-                `;
-            } else {
-                barsHtml = `
-                    ${renderBar('You', userA * 10, 'user')}
-                    ${renderBar('Group', groupA * 10, 'cohort')}
-                `;
-            }
-
-            row.innerHTML = `
-                <div class="domain-header">
-                    <div>
+        document.getElementById('domain-bars').innerHTML = DIMENSIONS.map(d => {
+            const shift = ((userState.after[d.id] - userState.before[d.id])/10)*100;
+            return `
+                <div class="domain-row">
+                    <div class="domain-header">
                         <span class="domain-name">${d.name}</span>
-                        <span class="domain-desc">${d.desc}</span>
+                        <span style="font-size:0.6rem;font-weight:900;color:${shift>=0?'var(--primary-dark)':'#ef4444'}">${shift>=0?'+':''}${shift.toFixed(0)}%</span>
                     </div>
-                    ${shiftHtml}
+                    <div class="bars-container" style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span style="font-size:0.5rem;width:30px;color:var(--slate-400);">YOU</span>
+                            <div class="bar-track"><div class="bar-fill user" style="width:${userState.after[d.id]*10}%"></div></div>
+                            <span style="font-size:0.5rem;width:20px;">${userState.after[d.id]*10}%</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span style="font-size:0.5rem;width:30px;color:var(--slate-400);">GRP</span>
+                            <div class="bar-track"><div class="bar-fill cohort" style="width:${cAvg[d.id].a*10}%"></div></div>
+                            <span style="font-size:0.5rem;width:20px;">${(cAvg[d.id].a*10).toFixed(0)}%</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="bars-container">${barsHtml}</div>
             `;
-            container.appendChild(row);
-        });
-    }
-
-    function renderBar(label, percent, typeClass) {
-        return `
-            <div class="bar-group">
-                <span class="bar-label">${label}</span>
-                <div class="bar-track">
-                    <div class="bar-fill ${typeClass}" style="width: ${percent}%"></div>
-                </div>
-                <span class="bar-val">${percent.toFixed(0)}%</span>
-            </div>
-        `;
-    }
-
-    function toggleView(view, btn) {
-        state.currentView = view;
-        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        const cohort = getCohortData();
-        renderDomainBars(view, cohortDomainAverages(cohort, cohort.length));
+        }).join('');
     }
 
     function resetApp() {
-        if (!confirm('Start a new session? (Your current individual progress will be reset)')) return;
-        DIMENSIONS.forEach(d => {
-            state.before[d.id] = 5;
-            state.after[d.id] = 5;
-        });
-        state.currentView = 'user';
-        renderInputs();
+        if (!confirm('Start a new session? (Your current data was saved to group results)')) return;
+        DIMENSIONS.forEach(d => { userState.before[d.id] = 5; userState.after[d.id] = 5; });
+        createInputs();
         showSection('welcome');
     }
 
-    function downloadCSV() {
-        const cohort = getCohortData();
-        const rows = [['Session Export', new Date().toLocaleString()]];
-        rows.push([]);
-        rows.push(['Dimension', 'Your Before (%)', 'Your After (%)', 'Individual Shift (%)']);
-        
-        DIMENSIONS.forEach(d => {
-            const b = state.before[d.id] * 10;
-            const a = state.after[d.id] * 10;
-            rows.push([d.name, `${b}%`, `${a}%`, `${(a - b).toFixed(1)}%`]);
-        });
-
-        // Simplified Group stats
-        const count = cohort.length;
-        rows.push([]);
-        rows.push(['Group Context', `Based on ${count} anonymous responses`]);
-
-        const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "happiness_connection_results.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    function clearGroupData() {
+        if (!confirm('ADMIN: Clear all anonymous group statistics?')) return;
+        if (!confirm('Confirming: This will permanently delete group totals.')) return;
+        localStorage.removeItem(STORAGE_KEY);
+        alert('Group results reset for new session.');
+        renderResults();
     }
 
-    // App Initialization
-    renderInputs();
+    createInputs();
 </script>
-
 </body>
 </html>
