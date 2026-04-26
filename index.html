@@ -88,7 +88,8 @@
         }
         .btn-primary { background: var(--slate-900); color: var(--white); box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.3); }
         .btn-primary:active { transform: scale(0.98); }
-        .btn-outline { background: var(--white); border: 1px solid var(--slate-200); color: var(--slate-600); margin-top: 1rem; }
+        .btn-outline { background: transparent; color: var(--slate-500); border: 2px solid var(--slate-200); }
+        .btn-outline:active { transform: scale(0.98); background: var(--slate-50); }
 
         .shift-badge {
             background: var(--slate-900); color: var(--white); padding: 1rem 1.5rem; border-radius: 1.5rem; text-align: center;
@@ -114,19 +115,42 @@
 
         footer {
             padding: 3rem 1.5rem; text-align: center; font-size: 0.65rem; font-weight: 800;
-            color: var(--slate-400); display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            color: var(--slate-400);
         }
 
-        .admin-reset-icon {
-            width: 20px; height: 20px; display: none; align-items: center; justify-content: center;
-            color: var(--slate-300); cursor: pointer; border-radius: 4px; border: none; background: transparent; opacity: 0.5;
+        #admin-reset-trigger {
+            cursor: pointer;
+            transition: color 0.2s;
+            display: inline-block;
+            padding: 4px;
         }
-        .admin-reset-icon:hover { color: #ef4444; opacity: 1; }
+        #admin-reset-trigger:hover { color: var(--primary); }
+
+        .group-section-title {
+            font-size: 0.6rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.1em; 
+            color: var(--slate-400); 
+            margin-bottom: 0.75rem;
+            display: block;
+            text-align: center;
+        }
+
+        .success-msg {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--primary-dark); color: white; padding: 0.75rem 1.5rem;
+            border-radius: 2rem; font-size: 0.75rem; font-weight: 800; z-index: 100;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            display: none; animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn { from { transform: translate(-50%, -100%); } to { transform: translate(-50%, 0); } }
 
         @media (max-width: 480px) { h1 { font-size: 1.5rem; } .card { padding: 1.5rem; } }
     </style>
 </head>
 <body>
+
+<div id="success-toast" class="success-msg">Group results reset successfully!</div>
 
 <div class="container">
     <header>
@@ -154,10 +178,10 @@
         <div class="card">
             <h2 style="font-size: 0.9rem; text-align: center; margin-bottom: 2rem; color: var(--slate-700);"><strong>Before we begin:</strong> Rate your current state</h2>
             <div id="before-inputs"></div>
-            <button class="btn btn-primary" onclick="showSection('after')" style="margin-top: 1rem;">
-                Next
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-outline" style="flex: 1; margin-top: 0;" onclick="showSection('welcome')">Back</button>
+                <button class="btn btn-primary" style="flex: 2; margin-top: 0;" onclick="showSection('after')">Next</button>
+            </div>
         </div>
     </div>
 
@@ -166,10 +190,10 @@
         <div class="card">
             <h2 style="font-size: 0.9rem; text-align: center; margin-bottom: 2rem; color: var(--slate-700);"><strong>After we finish:</strong> Reflect on your state</h2>
             <div id="after-inputs"></div>
-            <button class="btn btn-primary" onclick="processResults()" style="margin-top: 1rem;">
-                Generate Connection Shift
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            </button>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-outline" style="flex: 1; margin-top: 0;" onclick="showSection('before')">Back</button>
+                <button class="btn btn-primary" style="flex: 2; margin-top: 0;" onclick="processResults()">Generate Shift</button>
+            </div>
         </div>
     </div>
 
@@ -181,7 +205,7 @@
         </div>
 
         <div class="card">
-            <h3 style="font-size: 0.7rem; text-transform: uppercase; text-align: center; margin-bottom: 1rem; color: var(--slate-500);">Your Individual Scores</h3>
+            <h3 style="font-size: 0.7rem; text-transform: uppercase; text-align: center; margin-bottom: 1.5rem; color: var(--slate-900); font-weight: 900;">Your Individual Scores</h3>
             <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
                 <div class="score-card"><span class="score-lbl">Avg Before</span><span class="score-val" id="u-avg-b">0%</span></div>
                 <div class="score-card highlight"><span class="score-lbl">Avg After</span><span class="score-val" id="u-avg-a">0%</span></div>
@@ -189,49 +213,54 @@
         </div>
 
         <div class="card">
-            <h3 style="font-size: 0.7rem; text-transform: uppercase; text-align: center; margin-bottom: 1rem; color: var(--slate-500);">Group Results</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                <div>
-                    <span class="score-lbl" style="display: block; text-align: center; margin-bottom: 0.5rem;">Before</span>
-                    <div id="g-b-list" style="font-size: 0.65rem; color: var(--slate-600);"></div>
-                    <div class="score-card" style="margin-top: 0.5rem;"><span class="score-val" id="g-avg-b">0%</span></div>
-                </div>
-                <div>
-                    <span class="score-lbl" style="display: block; text-align: center; margin-bottom: 0.5rem;">After</span>
-                    <div id="g-a-list" style="font-size: 0.65rem; color: var(--slate-600);"></div>
-                    <div class="score-card highlight" style="margin-top: 0.5rem;"><span class="score-val" id="g-avg-a">0%</span></div>
+            <h3 style="font-size: 0.8rem; text-transform: uppercase; text-align: center; margin-bottom: 2rem; color: var(--slate-900); font-weight: 900;">Group Results</h3>
+            
+            <div style="margin-bottom: 2rem;">
+                <span class="group-section-title">Before</span>
+                <div id="g-b-list" style="font-size: 0.7rem; color: var(--slate-600); margin-bottom: 1rem;"></div>
+                <div style="display: flex; justify-content: center;">
+                    <div class="score-card" style="max-width: 120px;"><span class="score-lbl">Group Avg</span><span class="score-val" id="g-avg-b">0%</span></div>
                 </div>
             </div>
-            <div class="shift-badge group" style="max-width: 220px; padding: 0.75rem;">
+
+            <div style="margin-bottom: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--slate-100);">
+                <span class="group-section-title">After</span>
+                <div id="g-a-list" style="font-size: 0.7rem; color: var(--slate-600); margin-bottom: 1rem;"></div>
+                <div style="display: flex; justify-content: center;">
+                    <div class="score-card highlight" style="max-width: 120px;"><span class="score-lbl">Group Avg</span><span class="score-val" id="g-avg-a">0%</span></div>
+                </div>
+            </div>
+
+            <div class="shift-badge group" style="max-width: 240px; padding: 1rem;">
                 <span class="shift-percent" id="g-shift" style="font-size: 1.5rem;">+0%</span>
                 <span class="shift-label">Group Connection Shift</span>
-                <div id="g-count" style="font-size: 0.5rem; opacity: 0.8; margin-top: 0.25rem;">0 responses</div>
+                <div id="g-count" style="font-size: 0.55rem; opacity: 0.8; margin-top: 0.25rem; font-weight: 800;">0 responses</div>
             </div>
         </div>
 
         <div class="card">
+            <h3 class="group-section-title" style="margin-bottom: 1.5rem;">Dimension Breakdown</h3>
             <div id="domain-bars"></div>
             <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--slate-100); text-align: center;">
                 <p style="font-weight: 800; font-size: 0.8rem; color: var(--slate-900);">Alexia Georghiou</p>
-                <p style="font-size: 0.7rem; color: var(--slate-500); margin-top: 0.25rem;">
-                    <a href="mailto:alexia@knoxvillehappinesscoalition.com" style="color: inherit; text-decoration: none;">alexia@knoxvillehappinesscoalition.com</a><br>
-                    <a href="https://www.knoxvillehappinesscoalition.com" target="_blank" style="color: inherit; text-decoration: none;">www.knoxvillehappinesscoalition.com</a>
+                <p style="font-size: 0.7rem; font-weight: 700; color: var(--slate-500); margin-top: 0.25rem;">011-865-283-3605</p>
+                <p style="font-size: 0.7rem; color: var(--slate-500); margin-top: 0.5rem; line-height: 1.6;">
+                    <a href="mailto:alexia@knoxvillehappinesscoalition.com" style="color: inherit; text-decoration: none; border-bottom: 1px solid var(--slate-200);">alexia@knoxvillehappinesscoalition.com</a><br>
+                    <a href="https://www.knoxvillehappinesscoalition.com" target="_blank" style="color: inherit; text-decoration: none; border-bottom: 1px solid var(--slate-200);">www.knoxvillehappinesscoalition.com</a>
                 </p>
             </div>
         </div>
 
-        <a href="https://knoxvillehappinesscoalition.github.io/happiness/" class="btn btn-primary" style="background: #166534; margin-bottom: 1rem;">
+        <a href="https://knoxvillehappinesscoalition.github.io/happiness/" class="btn btn-primary" style="background: #166534;">
             I practice my happiness habits
         </a>
-        <button class="btn btn-outline" onclick="resetApp()">Start New Session</button>
     </div>
 </div>
 
 <footer>
-    <span>&copy; 2026 Knoxville Happiness Coalition</span>
-    <button id="admin-reset" class="admin-reset-icon" onclick="clearGroupData()" title="Admin reset group data">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m14.5 9-5 5"/><path d="m9.5 9 5 5"/></svg>
-    </button>
+    <span id="copyright-reset-container">
+        <span id="admin-reset-trigger" onclick="handleFooterClick()">&copy;</span> 2026 Knoxville Happiness Coalition
+    </span>
 </footer>
 
 <script>
@@ -243,29 +272,64 @@
     ];
 
     const STORAGE_KEY = 'happiness_v1';
-    let userState = { before: {}, after: {} };
+    const SESSION_KEY = 'happiness_session_v1';
+    let userState = { before: {}, after: {}, section: 'welcome' };
+    
+    // Initialize userState with defaults
     DIMENSIONS.forEach(d => { userState.before[d.id] = 5; userState.after[d.id] = 5; });
 
-    function showSection(id) {
+    function loadState() {
+        const saved = localStorage.getItem(SESSION_KEY);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                userState = { ...userState, ...parsed };
+            } catch(e) { console.error("Error loading session", e); }
+        }
+    }
+
+    function saveState() {
+        localStorage.setItem(SESSION_KEY, JSON.stringify(userState));
+    }
+
+    function showSection(id, track = true) {
+        userState.section = id;
+        if (track) saveState();
+
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(`section-${id}`).classList.add('active');
-        document.getElementById('admin-reset').style.display = (id === 'result') ? 'flex' : 'none';
+        const target = document.getElementById(`section-${id}`);
+        if (target) target.classList.add('active');
+        
+        // Only show the copyright as a clickable trigger on the result page
+        const trigger = document.getElementById('admin-reset-trigger');
+        if (id === 'result') {
+            trigger.style.pointerEvents = 'auto';
+            trigger.style.opacity = '1';
+        } else {
+            trigger.style.pointerEvents = 'none';
+            trigger.style.opacity = '0.5';
+        }
+
+        if (id === 'result') renderResults();
+        
         window.scrollTo(0,0);
     }
 
     function createInputs() {
         ['before', 'after'].forEach(type => {
             const container = document.getElementById(`${type}-inputs`);
+            if (!container) return;
             container.innerHTML = '';
             DIMENSIONS.forEach(d => {
+                const val = userState[type][d.id];
                 const group = document.createElement('div');
                 group.className = `input-group ${type}`;
                 group.innerHTML = `
                     <div class="label-wrap">
                         <div><label>${d.name}</label><span class="domain-desc">${d.desc}</span></div>
-                        <div class="val-display" id="v-${type}-${d.id}">${userState[type][d.id]}</div>
+                        <div class="val-display" id="v-${type}-${d.id}">${val}</div>
                     </div>
-                    <input type="range" min="0" max="10" value="${userState[type][d.id]}" oninput="updateVal('${type}','${d.id}',this.value)">
+                    <input type="range" min="0" max="10" value="${val}" oninput="updateVal('${type}','${d.id}',this.value)">
                     <div class="range-labels"><span>0</span><span>5</span><span>10</span></div>
                 `;
                 container.appendChild(group);
@@ -275,12 +339,14 @@
 
     function updateVal(type, id, val) {
         userState[type][id] = parseInt(val);
-        document.getElementById(`v-${type}-${id}`).innerText = val;
+        saveState();
+        const display = document.getElementById(`v-${type}-${id}`);
+        if(display) display.innerText = val;
     }
 
     function processResults() {
         let cohort = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        cohort.push({ before: userState.before, after: userState.after });
+        cohort.push({ before: {...userState.before}, after: {...userState.after} });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cohort));
         renderResults();
         showSection('result');
@@ -291,9 +357,13 @@
         const uA = Object.values(userState.after).reduce((a,b)=>a+b,0)/4;
         const uShift = ((uA - uB)/10)*100;
         
-        document.getElementById('user-shift-percent').innerText = `${uShift>=0?'+':''}${uShift.toFixed(1)}%`;
-        document.getElementById('u-avg-b').innerText = (uB*10).toFixed(0)+'%';
-        document.getElementById('u-avg-a').innerText = (uA*10).toFixed(0)+'%';
+        const userShiftEl = document.getElementById('user-shift-percent');
+        const userAvgBEl = document.getElementById('u-avg-b');
+        const userAvgAEl = document.getElementById('u-avg-a');
+        
+        if(userShiftEl) userShiftEl.innerText = `${uShift>=0?'+':''}${uShift.toFixed(1)}%`;
+        if(userAvgBEl) userAvgBEl.innerText = (uB*10).toFixed(0)+'%';
+        if(userAvgAEl) userAvgAEl.innerText = (uA*10).toFixed(0)+'%';
 
         const cohort = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const count = cohort.length;
@@ -314,58 +384,83 @@
         const cA = Object.values(cAvg).reduce((a,v)=>a+v.a,0)/4;
         const cShift = count > 0 ? ((cA - cB)/10)*100 : 0;
 
-        document.getElementById('g-avg-b').innerText = (cB*10).toFixed(0)+'%';
-        document.getElementById('g-avg-a').innerText = (cA*10).toFixed(0)+'%';
-        document.getElementById('g-shift').innerText = `${cShift>=0?'+':''}${cShift.toFixed(1)}%`;
-        document.getElementById('g-count').innerText = `${count} responses`;
+        const gAvgBEl = document.getElementById('g-avg-b');
+        const gAvgAEl = document.getElementById('g-avg-a');
+        const gShiftEl = document.getElementById('g-shift');
+        const gCountEl = document.getElementById('g-count');
+        
+        if(gAvgBEl) gAvgBEl.innerText = (cB*10).toFixed(0)+'%';
+        if(gAvgAEl) gAvgAEl.innerText = (cA*10).toFixed(0)+'%';
+        if(gShiftEl) gShiftEl.innerText = `${cShift>=0?'+':''}${cShift.toFixed(1)}%`;
+        if(gCountEl) gCountEl.innerText = `${count} responses`;
 
         ['b', 'a'].forEach(t => {
-            document.getElementById(`g-${t}-list`).innerHTML = DIMENSIONS.map(d => 
-                `<div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span>${d.name}</span><b>${(cAvg[d.id][t]*10).toFixed(0)}%</b></div>`
-            ).join('');
+            const listEl = document.getElementById(`g-${t}-list`);
+            if(listEl) {
+                listEl.innerHTML = DIMENSIONS.map(d => 
+                    `<div style="display:flex;justify-content:space-between;margin-bottom:6px;border-bottom:1px solid #f1f5f9;padding-bottom:2px;">
+                        <span>${d.name}</span>
+                        <b style="color:var(--slate-800);">${(cAvg[d.id][t]*10).toFixed(0)}%</b>
+                    </div>`
+                ).join('');
+            }
         });
 
-        document.getElementById('domain-bars').innerHTML = DIMENSIONS.map(d => {
-            const shift = ((userState.after[d.id] - userState.before[d.id])/10)*100;
-            return `
-                <div class="domain-row">
-                    <div class="domain-header">
-                        <span class="domain-name">${d.name}</span>
-                        <span style="font-size:0.6rem;font-weight:900;color:${shift>=0?'var(--primary-dark)':'#ef4444'}">${shift>=0?'+':''}${shift.toFixed(0)}%</span>
-                    </div>
-                    <div class="bars-container" style="display:flex;flex-direction:column;gap:4px;">
-                        <div style="display:flex;align-items:center;gap:10px;">
-                            <span style="font-size:0.5rem;width:30px;color:var(--slate-400);">YOU</span>
-                            <div class="bar-track"><div class="bar-fill user" style="width:${userState.after[d.id]*10}%"></div></div>
-                            <span style="font-size:0.5rem;width:20px;">${userState.after[d.id]*10}%</span>
+        const barsEl = document.getElementById('domain-bars');
+        if(barsEl) {
+            barsEl.innerHTML = DIMENSIONS.map(d => {
+                const shift = ((userState.after[d.id] - userState.before[d.id])/10)*100;
+                return `
+                    <div class="domain-row">
+                        <div class="domain-header">
+                            <span class="domain-name">${d.name}</span>
+                            <span style="font-size:0.65rem;font-weight:900;color:${shift>=0?'var(--primary-dark)':'#ef4444'}">${shift>=0?'+':''}${shift.toFixed(0)}%</span>
                         </div>
-                        <div style="display:flex;align-items:center;gap:10px;">
-                            <span style="font-size:0.5rem;width:30px;color:var(--slate-400);">GRP</span>
-                            <div class="bar-track"><div class="bar-fill cohort" style="width:${cAvg[d.id].a*10}%"></div></div>
-                            <span style="font-size:0.5rem;width:20px;">${(cAvg[d.id].a*10).toFixed(0)}%</span>
+                        <div class="bars-container" style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <span style="font-size:0.5rem;width:25px;color:var(--slate-400);font-weight:800;">YOU</span>
+                                <div class="bar-track"><div class="bar-fill user" style="width:${userState.after[d.id]*10}%"></div></div>
+                                <span style="font-size:0.55rem;width:25px;text-align:right;font-weight:800;">${userState.after[d.id]*10}%</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <span style="font-size:0.5rem;width:25px;color:var(--slate-400);font-weight:800;">GRP</span>
+                                <div class="bar-track"><div class="bar-fill cohort" style="width:${cAvg[d.id].a*10}%"></div></div>
+                                <span style="font-size:0.55rem;width:25px;text-align:right;font-weight:800;">${(cAvg[d.id].a*10).toFixed(0)}%</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-        }).join('');
+                `;
+            }).join('');
+        }
     }
 
-    function resetApp() {
-        if (!confirm('Start a new session? (Your current data was saved to group results)')) return;
-        DIMENSIONS.forEach(d => { userState.before[d.id] = 5; userState.after[d.id] = 5; });
-        createInputs();
-        showSection('welcome');
+    function handleFooterClick() {
+        if (userState.section !== 'result') return;
+        
+        if (confirm('You are going to delete all data. Should we proceed?')) {
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(SESSION_KEY); // Also clear session as it's the "only way to erase any data"
+            
+            // Re-initialize app state
+            userState = { before: {}, after: {}, section: 'welcome' };
+            DIMENSIONS.forEach(d => { userState.before[d.id] = 5; userState.after[d.id] = 5; });
+            
+            createInputs();
+            renderResults();
+            showSection('welcome');
+            
+            const toast = document.getElementById('success-toast');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
     }
 
-    function clearGroupData() {
-        if (!confirm('ADMIN: Clear all anonymous group statistics?')) return;
-        if (!confirm('Confirming: This will permanently delete group totals.')) return;
-        localStorage.removeItem(STORAGE_KEY);
-        alert('Group results reset for new session.');
-        renderResults();
-    }
-
+    // Initialize
+    loadState();
     createInputs();
+    showSection(userState.section, false);
 </script>
 </body>
 </html>
